@@ -1,0 +1,20 @@
+body{
+  background: #cfe1ff;
+}
+.first{
+  margin-top: 50px;
+  color: #00215E;
+  font-family: Monaco;
+}
+
+.five{
+  font-family: Monaco;
+  text-align: left;
+}
+.seven{
+  background-color: #378CE7;
+  color: white;
+  border-radius: 8px;
+  height:40px;
+  width: 100px
+}
