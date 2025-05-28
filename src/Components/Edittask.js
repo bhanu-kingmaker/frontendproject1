@@ -28,7 +28,7 @@ export default function Edittask() {
 
 
 
-      let api = 'http://localhost:4000/api/get_task_data/'+edit_taskid
+      let api = 'https://backendproject1-tawny.vercel.app/'+edit_taskid
         useEffect(() => {
         axios.get(api).then((response) => {
             console.log(response.data.task_data)
@@ -45,7 +45,7 @@ export default function Edittask() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const api = 'http://localhost:4000/api/edit_task/'+edit_taskid
+    const api = 'https://backendproject1-tawny.vercel.app/'+edit_taskid
         axios.put(api,data).then((response) => {
             console.log(response.data)
             if(response.status==200){
