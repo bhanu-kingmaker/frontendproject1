@@ -1,20 +1,18 @@
-import React from 'react'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function First() {
   const [list, setList] = useState([{}])
 
   useEffect(() => {
-    axios.get('https://backendproject1-tawny.vercel.app/api/getTask')
+    axios.get('http://localhost:5000/api/getTask')
       .then(res => setList(res.data.tas))
   }, [])
 
   // Delete function
   const handleDelete = (_id) => {
-    axios.delete(`https://backendproject1-tawny.vercel.app/api/deletetask/${_id}`)
+    axios.delete(`http://localhost:5000/api/deletetask/${_id}`)
       .then((response) => {
         if (response.status === 200) {
           alert("data deleted");

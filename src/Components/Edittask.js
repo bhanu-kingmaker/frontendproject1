@@ -1,8 +1,6 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 
 export default function Edittask() {
   const [data, setData] = useState({
@@ -23,7 +21,8 @@ export default function Edittask() {
   let params = useParams('id');
   let edit_taskid = params.id; // get id from url
 
-  let api = `https://backendproject1-tawny.vercel.app/api/get_task_data/${edit_taskid}`
+  // LOCAL API URL
+  let api = `http://localhost:5000/api/get_task_data/${edit_taskid}`;
   useEffect(() => {
     axios.get(api).then((response) => {
       console.log(response.data.task_data)
@@ -35,7 +34,7 @@ export default function Edittask() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const api = `https://backendproject1-tawny.vercel.app/api/edit_task/${edit_taskid}`
+    const api = `http://localhost:5000/api/edit_task/${edit_taskid}`;
     axios.put(api, data).then((response) => {
       console.log(response.data)
       if (response.status === 200) {

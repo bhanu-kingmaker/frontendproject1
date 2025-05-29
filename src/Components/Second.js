@@ -21,7 +21,7 @@ export default function Second() {
     event.preventDefault();
 
     console.log(data)
-    axios.post('https://backendproject1-tawny.vercel.app/api/addtask', data)
+    axios.post('http://localhost:5000/api/addtask', data)
       .then((response) => {
         console.log(response.data)
 
