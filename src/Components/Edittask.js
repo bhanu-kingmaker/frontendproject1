@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
+const API_BASE = process.env.REACT_APP_API_URL;
 export default function Edittask() {
   const [data, setData] = useState({
     task: "",
@@ -15,41 +16,46 @@ export default function Edittask() {
       ...prevProps,
       [name]: value
     }));
-    console.log(data);
   };
 
-  let params = useParams('id');
-  let edit_taskid = params.id; // get id from url
+  const params = useParams();
+  const edit_taskid = params.id;
 
-  // LOCAL API URL
-  let api = `http://localhost:5000/api/get_task_data/${edit_taskid}`;
+  // Use environment variable for API base URL
+  const API_BASE = process.env.REACT_APP_API_URL;
+
   useEffect(() => {
-    axios.get(api).then((response) => {
-      console.log(response.data.task_data)
-      setData(response.data.task_data);
-    });
-  }, [api]);
+    axios.get(`${API_BASE}/api/get_task_data/${edit_taskid}`)
+      .then((response) => {
+        setData(response.data.task_data);
+      })
+      .catch((error) => {
+        alert("Failed to fetch task data.");
+        console.error(error);
+      });
+  }, [API_BASE, edit_taskid]);
 
-  // updating the form after click update button
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const api = `http://localhost:5000/api/edit_task/${edit_taskid}`;
-    axios.put(api, data).then((response) => {
-      console.log(response.data)
-      if (response.status === 200) {
-        alert("Updated successfully.")
-        setData({
-          task: "",
-          status: "",
-          deadline: ""
-        });
-        window.location.href = '/';
-      }
-      else {
-        alert('function not working')
-      }
-    });
+    axios.put(`${API_BASE}/api/edit_task/${edit_taskid}`, data)
+      .then((response) => {
+        if (response.status === 200) {
+          alert("Updated successfully.");
+          setData({
+            task: "",
+            status: "",
+            deadline: ""
+          });
+          window.location.href = '/';
+        } else {
+          alert('Function not working');
+        }
+      })
+      .catch((error) => {
+        alert("Failed to update task.");
+        console.error(error);
+      });
   };
 
   return (
@@ -88,7 +94,7 @@ export default function Edittask() {
                 type="date"
                 className='form-control'
                 name="deadline"
-                value={data.deadline}
+                value={data.deadline ? data.deadline.substring(0, 10) : ""}
                 onChange={handleInputChange}
               />
               <br />
@@ -98,5 +104,5 @@ export default function Edittask() {
         </div>
       </div>
     </>
-  )
+  );
 }

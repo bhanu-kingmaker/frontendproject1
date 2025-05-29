@@ -1,25 +1,36 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export default function First() {
-  const [list, setList] = useState([{}])
+  const [list, setList] = useState([]);
+
+  const API_BASE = process.env.REACT_APP_API_URL;
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/getTask')
+    axios.get(`${API_BASE}/api/getTask`)
       .then(res => setList(res.data.tas))
-  }, [])
+      .catch((err) => {
+        alert("Failed to fetch tasks.");
+        console.error(err);
+      });
+  }, [API_BASE]);
 
   // Delete function
   const handleDelete = (_id) => {
-    axios.delete(`http://localhost:5000/api/deletetask/${_id}`)
+    axios.delete(`${API_BASE}/api/deletetask/${_id}`)
       .then((response) => {
         if (response.status === 200) {
-          alert("data deleted");
-          window.location.href = '/'
+          alert("Data deleted");
+          window.location.href = '/';
         }
       })
-  }
+      .catch((err) => {
+        alert("Failed to delete task.");
+        console.error(err);
+      });
+  };
 
   return (
     <>
@@ -38,28 +49,24 @@ export default function First() {
               <th>Actions</th>
             </tr>
           </thead>
-          {
-            list.map((e, i) => {
-              return (
-                <>
-                  <tbody>
-                    <tr>
-                      <td>{i + 1}</td>
-                      <td>{e.task}</td>
-                      <td>{e.status}</td>
-                      <td>{e.deadline}</td>
-                      <td>
-                        <Link to={`/edittask/${e._id}`}>
-                          <button className="btn btn-primary">Edit</button>
-                        </Link>
-                        <button className='btn btn-danger' onClick={() => handleDelete(e._id)}>Delete</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </>
-              )
-            })
-          }
+          <tbody>
+            {
+              list && list.map((e, i) => (
+                <tr key={e._id}>
+                  <td>{i + 1}</td>
+                  <td>{e.task}</td>
+                  <td>{e.status}</td>
+                  <td>{e.deadline}</td>
+                  <td>
+                    <Link to={`/edittask/${e._id}`}>
+                      <button className="btn btn-primary">Edit</button>
+                    </Link>
+                    <button className='btn btn-danger' onClick={() => handleDelete(e._id)}>Delete</button>
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
         </table>
       </div>
     </>

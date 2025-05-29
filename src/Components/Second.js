@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+const API_BASE = process.env.REACT_APP_API_URL;
 
 export default function Second() {
   const [data, setData] = useState({
@@ -8,30 +9,37 @@ export default function Second() {
     deadline: ""
   });
 
+  // Use environment variable for API base URL
+  const API_BASE = process.env.REACT_APP_API_URL;
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setData((prevProps) => ({
       ...prevProps,
       [name]: value
     }));
-    console.log(data);
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(data)
-    axios.post('http://localhost:5000/api/addtask', data)
+    axios.post(`${API_BASE}/api/addtask`, data)
       .then((response) => {
-        console.log(response.data)
-
         if (response.status === 200) {
-          alert('data inserted');
+          alert('Data inserted');
+          setData({
+            task: "",
+            status: "",
+            deadline: ""
+          });
           window.location.href = '';
+        } else {
+          alert('Failed');
         }
-        else {
-          alert('failed');
-        }
+      })
+      .catch((error) => {
+        alert("Failed to add task.");
+        console.error(error);
       });
   }
 
